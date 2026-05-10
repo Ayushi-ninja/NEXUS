@@ -1,0 +1,188 @@
+@import 'leaflet/dist/leaflet.css';
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+  body {
+    background-color: #030712;
+    color: #f1f5f9;
+    background-image:
+      linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 212, 255, 0.2) rgba(15, 23, 42, 0.5);
+  }
+  *::-webkit-scrollbar { width: 4px; height: 4px; }
+  *::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+  *::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.2); border-radius: 2px; }
+  *::-webkit-scrollbar-thumb:hover { background: rgba(0, 212, 255, 0.4); }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+  }
+
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .glass-panel-dark {
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+  }
+
+  .neon-glow-cyan {
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.3) !important;
+  }
+
+  .neon-glow-purple {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.3) !important;
+  }
+
+  .neon-glow-green {
+    box-shadow: 0 0 15px rgba(6, 214, 160, 0.2);
+    border-color: rgba(6, 214, 160, 0.3) !important;
+  }
+
+  .neon-glow-red {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.3) !important;
+  }
+
+  .neon-border-blue {
+    @apply border border-[#00d4ff]/30 shadow-neon-blue;
+  }
+  .neon-border-purple {
+    @apply border border-[#a855f7]/30 shadow-neon-purple;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #00d4ff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-animated {
+    background: linear-gradient(135deg, #00d4ff, #a855f7, #06d6a0);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 4s ease infinite;
+  }
+
+  .neon-text-cyan {
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
+
+  .status-badge {
+    @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-[#00d4ff] text-black font-bold rounded-lg hover:bg-white transition-all duration-300 active:scale-95;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 bg-white/5 border border-white/10 text-white font-bold rounded-lg hover:bg-white/10 transition-all duration-300 active:scale-95;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-lg hover:bg-red-500/20 transition-all duration-300 active:scale-95;
+  }
+
+  .stat-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+  }
+  .stat-card:hover {
+    border-color: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-ring 2s infinite;
+  }
+
+  .live-badge {
+    @apply flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest;
+    background: rgba(6, 214, 160, 0.1);
+    border: 1px solid rgba(6, 214, 160, 0.3);
+    color: #06d6a0;
+  }
+
+  .critical-badge {
+    @apply px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider;
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .high-badge {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    @apply px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider;
+  }
+
+  .medium-badge {
+    background: rgba(0, 212, 255, 0.2);
+    color: #00d4ff;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    @apply px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider;
+  }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  70% { box-shadow: 0 0 0 6px currentColor; opacity: 0; }
+  100% { box-shadow: 0 0 0 0 currentColor; opacity: 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
