@@ -153,6 +153,20 @@ const Dashboard = () => {
     );
   }
 
+  const TICKER_ITEMS = [
+    `🚦 NEURAL SYNC ACTIVE`,
+    `🚗 VEHICLES DETECTED: ${stats.totalVehicles.toLocaleString()}`,
+    `⚡ AVG SPEED: ${stats.avgSpeed} KM/H`,
+    `📊 CONGESTION INDEX: ${stats.congestionLevel}%`,
+    `🧠 AI EFFICIENCY: 94.2%`,
+    `🌤️ WEATHER: ${weather.condition.toUpperCase()} · ${weather.temperature_c}°C`,
+    `📡 WS: ${isConnected ? 'CONNECTED' : 'RECONNECTING'}`,
+    `🛡️ ACTIVE JUNCTIONS: 24/24`,
+    `⏱️ AVG WAIT: ${stats.avgSpeed > 0 ? '18s' : '--'}`,
+    `🔴 ALERTS: ${stats.incidents}`,
+  ];
+  const tickerStr = TICKER_ITEMS.join('   ·   ');
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -160,6 +174,18 @@ const Dashboard = () => {
       transition={{ duration: 0.4 }}
       className="space-y-6 pb-12"
     >
+      {/* Scrolling command ticker */}
+      <div className="ticker-wrap rounded-xl overflow-hidden"
+        style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.12)', height: '32px', display: 'flex', alignItems: 'center' }}>
+        <div className="flex-shrink-0 flex items-center gap-1.5 px-3 border-r border-[#00d4ff]/20 h-full">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#06d6a0] animate-pulse" />
+          <span className="text-[9px] font-black text-[#00d4ff] uppercase tracking-widest font-mono">LIVE</span>
+        </div>
+        <div className="ticker-content text-[10px] font-mono font-bold text-slate-400 tracking-wider ml-4">
+          {tickerStr}&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;{tickerStr}
+        </div>
+      </div>
+
       <AnimatePresence>
         {showEmergencyPopup && (
           <EmergencyAlertPopup
@@ -405,6 +431,24 @@ const Dashboard = () => {
               <h2 className="font-headline font-bold text-white text-sm">Live Activity</h2>
             </div>
             <LiveActivityFeed />
+          </div>
+
+          {/* Weather mini-card */}
+          <div className="glass-card p-4"
+            style={{ background: 'rgba(96,165,250,0.05)', border: '1px solid rgba(96,165,250,0.15)' }}>
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">
+                {weather.condition === 'rain' ? '🌧️' : weather.condition === 'fog' ? '🌫️' : weather.condition === 'storm' ? '⛈️' : '☀️'}
+              </span>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-blue-400 font-mono">Weather Status</p>
+                  <span className="text-[10px] font-mono text-slate-500">{weather.temperature_c}°C</span>
+                </div>
+                <p className="text-sm font-bold text-white capitalize">{weather.condition} · {weather.wind_speed_kmh} km/h wind</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">Visibility {weather.visibility_km}km · {weather.humidity_percent}% humidity</p>
+              </div>
+            </div>
           </div>
 
           {/* Emergency Alerts */}

@@ -8,11 +8,28 @@ import {
 import { trafficApi } from '../services/apiService';
 import { Car, Activity, AlertTriangle, TrendingUp, Eye, Cpu, Zap, ShieldCheck } from 'lucide-react';
 
+// Animated vehicle count hook
+const useVehicleCounts = () => {
+  const stats = useTrafficStats();
+  const [counts, setCounts] = useState({ cars: 0, trucks: 0, buses: 0, motorcycles: 0 });
+  useEffect(() => {
+    const total = stats.totalVehicles;
+    setCounts({
+      cars:        Math.round(total * 0.55),
+      trucks:      Math.round(total * 0.15),
+      buses:       Math.round(total * 0.12),
+      motorcycles: Math.round(total * 0.18),
+    });
+  }, [stats.totalVehicles]);
+  return counts;
+};
+
 const LiveMonitoring = () => {
   const stats = useTrafficStats();
   const insights = useAIInsights();
   const detectionLog = useLiveDetection(12);
   const liveSignals = useSignalData();
+  const vehicleCounts = useVehicleCounts();
   const [emergencyTriggering, setEmergencyTriggering] = useState(false);
   const [yoloStatus, setYoloStatus] = useState<'ready' | 'mock' | 'loading'>('loading');
 
@@ -86,6 +103,33 @@ const LiveMonitoring = () => {
         </div>
       </div>
 
+      {/* Vehicle Detection Stats Banner */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { label: 'Cars', value: vehicleCounts.cars, icon: '🚗', color: '#00d4ff', bg: 'rgba(0,212,255,0.08)' },
+          { label: 'Trucks', value: vehicleCounts.trucks, icon: '🚛', color: '#a855f7', bg: 'rgba(168,85,247,0.08)' },
+          { label: 'Buses', value: vehicleCounts.buses, icon: '🚌', color: '#06d6a0', bg: 'rgba(6,214,160,0.08)' },
+          { label: 'Motorcycles', value: vehicleCounts.motorcycles, icon: '🏍️', color: '#fbbf24', bg: 'rgba(251,191,36,0.08)' },
+        ].map((v, i) => (
+          <motion.div
+            key={v.label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06 }}
+            className="detection-badge justify-between"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{v.icon}</span>
+              <div>
+                <p className="text-[9px] text-slate-500 uppercase tracking-widest">{v.label}</p>
+                <p className="text-lg font-black" style={{ color: v.color }}>{v.value}</p>
+              </div>
+            </div>
+            <div className="w-1 h-8 rounded-full ml-2" style={{ background: v.color, opacity: 0.4 }} />
+          </motion.div>
+        ))}
+      </div>
+
       {/* Stat strip */}
       <div className="grid grid-cols-3 gap-4">
         {[
@@ -114,20 +158,48 @@ const LiveMonitoring = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left — CCTV + Detection log + Lane density */}
         <div className="lg:col-span-8 space-y-6">
-          {/* CCTV */}
-          <div className="glass-panel p-0 overflow-hidden rounded-xl">
-            <div className="flex items-center justify-between px-5 py-3 border-b border-white/5">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+          {/* CCTV with HUD overlay */}
+          <div className="glass-panel p-0 overflow-hidden rounded-xl hud-frame scanline-overlay"
+            style={{ border: '1px solid rgba(0,212,255,0.15)' }}>
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#00d4ff]/10"
+              style={{ background: 'rgba(0,212,255,0.03)' }}>
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"
+                  style={{ boxShadow: '0 0 6px #ef4444' }} />
                 <span className="font-mono text-xs font-bold text-white tracking-widest">CAM-01 | Junction Main</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold"
+                  style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}>REC</span>
               </div>
               <div className="flex items-center gap-4 font-mono text-[10px] text-[#00d4ff]">
-                <span>FPS: 30</span>
-                <span>VEHICLES: 24</span>
-                <span>INFERENCE: 12ms</span>
+                <span>FPS: <strong>30</strong></span>
+                <span>VEHICLES: <strong>{vehicleCounts.cars + vehicleCounts.trucks + vehicleCounts.buses}</strong></span>
+                <span>INFER: <strong>12ms</strong></span>
+                <span className="text-[#06d6a0] font-bold">YOLOv8 ✓</span>
               </div>
             </div>
-            <CCTVMonitor />
+            <div className="relative">
+              <CCTVMonitor />
+              {/* HUD corner brackets overlay */}
+              <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
+                {/* TL */}
+                <div className="absolute top-3 left-3 w-6 h-6"
+                  style={{ borderTop: '2px solid rgba(0,212,255,0.6)', borderLeft: '2px solid rgba(0,212,255,0.6)', borderRadius: '2px 0 0 0' }} />
+                {/* TR */}
+                <div className="absolute top-3 right-3 w-6 h-6"
+                  style={{ borderTop: '2px solid rgba(0,212,255,0.6)', borderRight: '2px solid rgba(0,212,255,0.6)', borderRadius: '0 2px 0 0' }} />
+                {/* BL */}
+                <div className="absolute bottom-3 left-3 w-6 h-6"
+                  style={{ borderBottom: '2px solid rgba(0,212,255,0.6)', borderLeft: '2px solid rgba(0,212,255,0.6)', borderRadius: '0 0 0 2px' }} />
+                {/* BR */}
+                <div className="absolute bottom-3 right-3 w-6 h-6"
+                  style={{ borderBottom: '2px solid rgba(0,212,255,0.6)', borderRight: '2px solid rgba(0,212,255,0.6)', borderRadius: '0 0 2px 0' }} />
+                {/* Center crosshair */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                  <div className="w-8 h-px bg-[#00d4ff]" />
+                  <div className="absolute w-px h-8 bg-[#00d4ff]" />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Detection log + Lane density */}

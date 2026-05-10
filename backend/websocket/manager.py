@@ -38,6 +38,26 @@ WEATHER_MAP: Dict[str, OptWeather] = {
 # ── Signal optimizer singleton ────────────────────────────────────────────────
 _optimizer = SignalOptimizer()
 
+# ── AI Detection integration ──────────────────────────────────────────────────
+import cv2
+from detection.yolo_detector import yolo_detector
+
+# Path to the demo video used for real-time AI analytics simulation
+DEMO_VIDEO_PATH = "static/demo_traffic.mp4"
+_cap = cv2.VideoCapture(DEMO_VIDEO_PATH)
+
+def _get_next_frame():
+    """Read next frame from demo video, loop if EOF."""
+    global _cap
+    if not _cap.isOpened():
+        _cap = cv2.VideoCapture(DEMO_VIDEO_PATH)
+    
+    ret, frame = _cap.read()
+    if not ret:
+        _cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        ret, frame = _cap.read()
+    return frame
+
 # ── Shared simulation state ───────────────────────────────────────────────────
 _sim_state: Dict[str, Any] = {
     "densities": {"north": 45.0, "south": 38.0, "east": 62.0, "west": 30.0},

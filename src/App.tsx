@@ -7,6 +7,7 @@ import AIInsights from './pages/AIInsights';
 import EmergencyControl from './pages/EmergencyControl';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import Weather from './pages/Weather';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/ai-insights" element={<AIInsights />} />
           <Route path="/emergency" element={<EmergencyControl />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/weather" element={<Weather />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </DashboardLayout>

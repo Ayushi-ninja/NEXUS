@@ -10,6 +10,8 @@ import {
   Menu,
   X,
   Zap,
+  CloudRain,
+  Radio,
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -18,6 +20,7 @@ interface NavItem {
   path: string;
   icon: typeof LayoutDashboard;
   badge?: string;
+  badgeColor?: string;
 }
 
 const navItems: NavItem[] = [
@@ -25,8 +28,9 @@ const navItems: NavItem[] = [
   { label: 'Live Monitoring', path: '/live-monitoring', icon: Activity },
   { label: 'Digital Twin', path: '/digital-twin', icon: Box },
   { label: 'AI Insights', path: '/ai-insights', icon: Brain },
-  { label: 'Emergency Control', path: '/emergency', icon: AlertTriangle, badge: 'LIVE' },
+  { label: 'Emergency Control', path: '/emergency', icon: AlertTriangle, badge: 'LIVE', badgeColor: '#ef4444' },
   { label: 'Analytics', path: '/analytics', icon: BarChart3 },
+  { label: 'Weather', path: '/weather', icon: CloudRain },
   { label: 'Settings', path: '/settings', icon: Settings },
 ];
 
@@ -60,17 +64,19 @@ const Sidebar = ({ isOpen, isMobile, onToggle }: SidebarProps) => {
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className="fixed left-0 top-0 h-full z-50 overflow-hidden"
         style={{
-          background: 'rgba(3, 7, 18, 0.92)',
+          background: 'rgba(3, 7, 18, 0.95)',
           backdropFilter: 'blur(20px)',
           borderRight: '1px solid rgba(255,255,255,0.05)',
           boxShadow: '4px 0 30px rgba(0,0,0,0.5)',
         }}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center px-4 border-b border-white/5">
-          <div className="w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center"
+        <div className="h-16 flex items-center px-4 border-b border-white/5 relative overflow-hidden">
+          <div className="shimmer-line" />
+          <div className="w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center relative"
             style={{ background: 'linear-gradient(135deg, #00d4ff, #a855f7)' }}>
             <Activity size={18} className="text-white" />
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#06d6a0] border-2 border-[#030712]" />
           </div>
           <AnimatePresence>
             {isOpen && (
@@ -81,36 +87,53 @@ const Sidebar = ({ isOpen, isMobile, onToggle }: SidebarProps) => {
                 className="ml-3 overflow-hidden"
               >
                 <h1 className="font-headline font-bold text-base gradient-text whitespace-nowrap">AI Junction</h1>
-                <p className="text-[10px] text-slate-500 whitespace-nowrap">Traffic Intelligence v2.0</p>
+                <p className="text-[9px] text-slate-500 whitespace-nowrap font-mono tracking-wider">Traffic Intelligence v2.0</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* System status pill */}
+        {/* System status chip */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="mx-3 mt-4 mb-2 p-2.5 rounded-lg flex items-center gap-2"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="mx-3 mt-4 mb-2"
             >
-              <div className="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0"
-                style={{ background: 'rgba(0,212,255,0.1)' }}>
-                <Zap size={14} className="text-[#00d4ff]" />
+              {/* Online status */}
+              <div className="p-2.5 rounded-lg flex items-center gap-2 mb-2"
+                style={{ background: 'rgba(6,214,160,0.06)', border: '1px solid rgba(6,214,160,0.2)' }}>
+                <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(6,214,160,0.1)' }}>
+                  <Radio size={12} className="text-[#06d6a0]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black text-[#06d6a0] uppercase tracking-wider whitespace-nowrap">System Online</p>
+                  <p className="text-[9px] text-slate-500 font-mono whitespace-nowrap">24 junctions · AI active</p>
+                </div>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#06d6a0] animate-pulse ml-auto flex-shrink-0" />
               </div>
-              <div>
-                <p className="text-[10px] font-headline font-black text-[#00d4ff] uppercase tracking-wider">Traffic Intelligence</p>
-                <p className="text-[9px] text-slate-500 font-mono">Active Nodes: 1,240</p>
+
+              {/* Intelligence status */}
+              <div className="p-2.5 rounded-lg flex items-center gap-2"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(0,212,255,0.1)' }}>
+                  <Zap size={12} className="text-[#00d4ff]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black text-[#00d4ff] uppercase tracking-wider whitespace-nowrap">Neural Sync</p>
+                  <p className="text-[9px] text-slate-500 font-mono whitespace-nowrap">Active Nodes: 1,240</p>
+                </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Navigation */}
-        <nav className="px-2 py-2 space-y-0.5 overflow-y-auto" style={{ height: 'calc(100vh - 220px)' }}>
+        <nav className="px-2 py-2 space-y-0.5 overflow-y-auto" style={{ height: 'calc(100vh - 260px)' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
@@ -122,7 +145,7 @@ const Sidebar = ({ isOpen, isMobile, onToggle }: SidebarProps) => {
                   style={active ? {
                     background: 'linear-gradient(90deg, rgba(0,212,255,0.1) 0%, transparent 100%)',
                     borderLeft: '3px solid #00d4ff',
-                    boxShadow: '0 0 15px rgba(0,212,255,0.1)',
+                    boxShadow: '0 0 15px rgba(0,212,255,0.08)',
                     paddingLeft: '10px',
                   } : {
                     borderLeft: '3px solid transparent',
@@ -145,7 +168,11 @@ const Sidebar = ({ isOpen, isMobile, onToggle }: SidebarProps) => {
                         </span>
                         {item.badge && (
                           <span className="text-[8px] font-black px-1.5 py-0.5 rounded font-mono ml-2 flex-shrink-0"
-                            style={{ background: 'rgba(239,68,68,0.2)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}>
+                            style={{ 
+                              background: `${item.badgeColor}20`,
+                              color: item.badgeColor, 
+                              border: `1px solid ${item.badgeColor}40` 
+                            }}>
                             {item.badge}
                           </span>
                         )}
