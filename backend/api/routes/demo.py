@@ -214,6 +214,8 @@ async def trigger_scenario(scenario: str):
 @router.post("/reset", summary="Reset simulation to baseline")
 async def reset_demo():
     """Reset all state to demo-ready baseline."""
+    global _demo_running
+    _demo_running = False
     manager.clear_emergency()
     manager.set_weather("clear", 1.0)
     manager.set_demo_density(42.0)

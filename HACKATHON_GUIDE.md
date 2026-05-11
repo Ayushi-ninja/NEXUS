@@ -1,4 +1,6 @@
-# AI Junction Optimization System — Hackathon Guide
+# AI Junction Optimization System — Hackathon Deployment & Demo Guide
+
+> **Test Status:** 36/36 automated tests passing (REST APIs, WebSocket, Gemini AI, Weather, Demo sequence, Failsafe edge cases)
 
 ## Human-Required Tasks
 
@@ -70,15 +72,23 @@
 
 **STEPS:**
 1. Create account at https://render.com
-2. Connect GitHub repo
-3. Create Web Service
+2. New → Web Service → Connect GitHub repo
+3. Root Directory: `backend`
 4. Build command: `pip install -r requirements.txt`
 5. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. Set env vars: `GEMINI_API_KEY`, `OPENWEATHER_API_KEY`, `ALLOWED_ORIGINS`
+6. Add Environment Variables (manually in Render dashboard):
+   - `GEMINI_API_KEY` = your key
+   - `OPENWEATHER_API_KEY` = your key
+   - `WEATHER_CITY` = Mumbai
+   - `ENV` = production
+   - `DEBUG` = False
+   - `ALLOWED_ORIGINS` = `["https://your-project.vercel.app","http://localhost:5173"]`
+7. After deploy, copy the Render URL
+8. Update Vercel env var `VITE_API_URL` and `VITE_WS_URL` with Render URL
 
 **CREDENTIALS:** Render account (free tier)
 
-**EXPECTED RESULT:** Backend accessible at `https://your-backend.onrender.com`
+**EXPECTED RESULT:** Backend accessible at `https://junction-ai-backend.onrender.com`
 
 ---
 

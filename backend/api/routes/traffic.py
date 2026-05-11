@@ -144,6 +144,9 @@ async def clear_emergency():
     _emergency_state["active"] = False
     _emergency_state["direction"] = None
     _emergency_state["triggered_at"] = None
+    # Also clear the traffic_service store so GET /emergency returns active=False
+    from services.traffic_service import _EMERGENCY_STORE
+    _EMERGENCY_STORE.clear()
     return {"status": "cleared", "message": "Emergency state manually cleared"}
 
 

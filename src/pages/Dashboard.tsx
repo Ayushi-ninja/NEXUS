@@ -26,7 +26,7 @@ const Dashboard = () => {
   const stats = useTrafficStats();
   const insights = useAIInsights();
   const { alerts, acknowledgeAlert, resolveAlert } = useEmergencyAlerts();
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
   const liveSignals = useSignalData();
   const { weather } = useWeatherData();
   const [showEmergencyPopup, setShowEmergencyPopup] = useState(false);
@@ -376,7 +376,7 @@ const Dashboard = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-xl font-headline font-black font-mono" style={{ color: signalColor(sig.color) }}>
+                  <span className="text-xl font-headline font-black" style={{ color: signalColor(sig.color), fontVariantNumeric: 'tabular-nums' }}>
                     {sig.timer}s
                   </span>
                 </motion.div>

@@ -42,6 +42,7 @@ export const useSocketConnection = () => {
       setConnectionStatus('connecting');
     };
 
+    socketClient.connect();
     socketClient.on('connect', handleConnect);
     socketClient.on('disconnect', handleDisconnect);
     socketClient.on('connecting', handleConnecting);
@@ -65,7 +66,7 @@ export const useSocketConnection = () => {
  */
 export const useJunctionData = () => {
   const [junctions, setJunctions] = useState<JunctionData[]>(mockJunctions);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   useEffect(() => {
     const handleTrafficUpdate = (payload: any) => {
@@ -120,7 +121,7 @@ export const useJunctionData = () => {
  */
 export const useTrafficStats = () => {
   const [stats, setStats] = useState<TrafficStats>(mockTrafficStats);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   useEffect(() => {
     const handleTrafficUpdate = (payload: any) => {
@@ -166,7 +167,7 @@ export const useTrafficStats = () => {
  */
 export const useAIInsights = () => {
   const [insights, setInsights] = useState<AIInsight[]>(mockAIInsights);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   useEffect(() => {
     const handleAIInsight = (payload: any) => {
@@ -199,7 +200,7 @@ export const useAIInsights = () => {
  */
 export const useEmergencyAlerts = () => {
   const [alerts, setAlerts] = useState<EmergencyAlert[]>(mockEmergencyAlerts);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   const acknowledgeAlert = (id: string) => {
     setAlerts(prev => prev.map(a => a.id === id ? { ...a, status: 'acknowledged' as const } : a));
@@ -260,7 +261,7 @@ const DEFAULT_SIGNALS: SignalState[] = [
 
 export const useSignalData = (): SignalState[] => {
   const [signals, setSignals] = useState<SignalState[]>(DEFAULT_SIGNALS);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   useEffect(() => {
     const handleUpdate = (payload: any) => {
@@ -347,7 +348,7 @@ const DEFAULT_WEATHER: WeatherData = {
 export const useWeatherData = () => {
   const [weather, setWeather] = useState<WeatherData>(DEFAULT_WEATHER);
   const [loading, setLoading] = useState(false);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
@@ -405,7 +406,7 @@ export interface DetectionEvent {
 
 export const useLiveDetection = (maxEntries: number = 12): DetectionEvent[] => {
   const [log, setLog] = useState<DetectionEvent[]>([]);
-  const isConnected = useSocketConnection();
+  const { isConnected } = useSocketConnection();
 
   useEffect(() => {
     const handleUpdate = (payload: any) => {

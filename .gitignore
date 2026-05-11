@@ -1,2 +1,28 @@
 node_modules
 .vercel
+dist
+
+# Python backend
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/.env
+
+# Large binary/media files
+*.mp4
+*.avi
+*.mov
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
