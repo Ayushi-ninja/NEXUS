@@ -2,22 +2,12 @@ node_modules
 .vercel
 dist
 
-# Environment files (contain secrets/URLs)
-.env.local
-.env.production
-
 # Python backend
 backend/venv/
 backend/__pycache__/
 backend/**/__pycache__/
 backend/**/*.pyc
 backend/.env
-
-# AI model files
-*.pt
-*.onnx
-*.pkl
-*.h5
 
 # Large binary/media files
 *.mp4
@@ -36,6 +26,3 @@ Thumbs.db
 
 # Logs
 *.log
-
-# Vite dev cache
-.vite/
